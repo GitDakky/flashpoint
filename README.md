@@ -16,6 +16,12 @@
   another destroys it · decisions persist after teardown.
 </p>
 
+<p align="center">
+  🤖 <strong>Deploy it hands-off:</strong> hand your agent the ready-made
+  <a href="docs/agent-deploy-prompt.md"><strong>deployment prompt</strong></a>
+  and it installs, builds, configures, runs and smoke-tests Flashpoint for you.
+</p>
+
 ---
 
 ## Why this exists
