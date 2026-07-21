@@ -29,15 +29,14 @@ for the full 1 → 100,000,000 agent compute/cost model.
 ## Quick start
 
 ```bash
-# 1. Build the agent image on a Docker host
-docker build -t flashpoint/agent:latest agent/
+# On a fresh Docker host (as root), from the repo root:
+./deploy/runner.sh --gateway-host <this-host-ip>
+```
 
-# 2. Configure + start the spawner
-cp spawner/.env.example /opt/flashpoint/.env   # fill in values
-sudo cp spawner/as-spawner.service /etc/systemd/system/
-sudo systemctl enable --now as-spawner
+That one command builds the agent image, writes `/opt/flashpoint/.env`, installs
+and starts the spawner, and health-checks it. Then:
 
-# 3. Spawn an agent
+```bash
 curl -X POST http://localhost:2880/spawn \
   -H "Content-Type: application/json" \
   -d '{"mission":"analyse Q1 receipts","tier":"ephemeral"}'
@@ -46,6 +45,17 @@ curl -X POST http://localhost:2880/spawn \
 Response includes the agent's `agent_id`, `gateway_url` and `gateway_token`.
 Destroy it with `DELETE /agent/<id>`. Spawn a whole wave with
 [`examples/spawn_wave.py`](examples/spawn_wave.py).
+
+<details><summary><b>Manual setup</b> (instead of deploy/runner.sh)</summary>
+
+```bash
+docker build -t flashpoint/agent:latest agent/
+cp spawner/.env.example /opt/flashpoint/.env   # fill in values
+sudo cp spawner/as-spawner.service /etc/systemd/system/
+sudo systemctl enable --now as-spawner
+```
+
+</details>
 
 ## How it works
 
@@ -77,6 +87,8 @@ after teardown, so any agent can be traced back to its exact spawn. Details in
 | `spawner/spawner.py` | The Spawner API (spawn / list / lookup / destroy) |
 | `spawner/.env.example` | Configuration template |
 | `spawner/as-spawner.service` | systemd unit |
+| `deploy/runner.sh` | One-command runner setup (build, configure, start) |
+| `deploy/schema.sql` | Postgres fleet-wide spawn-registry schema |
 | `agent/` | Agent Dockerfile + bootstrap (`entrypoint.sh`, decision logger, SOUL) |
 | `terraform/` | Optional LXC-clone path for full-OS agents |
 | `examples/spawn_wave.py` | Parallel wave spawn/destroy example |

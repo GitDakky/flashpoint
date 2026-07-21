@@ -34,6 +34,11 @@ GATEWAY_HOST   = os.environ.get("FP_GATEWAY_HOST", "")
 # Optional path for a JSONL spawn registry — one line per spawn, kept after
 # teardown so an agent_id can always be traced back to its exact spawn.
 REGISTRY_PATH  = os.environ.get("FP_REGISTRY_PATH", "")
+# Optional Postgres DSN for a fleet-wide registry (e.g.
+# "host=db dbname=flashpoint user=flashpoint password=..."). When set, spawns
+# and destroys are recorded in a shared `spawn_registry` table so any spawner
+# can resolve any agent_id. Takes precedence over the JSONL file.
+REGISTRY_DSN   = os.environ.get("FP_REGISTRY_DSN", "")
 # Default model for agents when the caller does not override it.
 DEFAULT_MODEL  = os.environ.get("FP_DEFAULT_MODEL", "openrouter/anthropic/claude-opus-4-8")
 
@@ -52,10 +57,78 @@ def docker(args):
 def _gateway_host():
     if GATEWAY_HOST:
         return GATEWAY_HOST
-    out, _, _ = docker(["info", "--format", "{{.DefaultAddressPools}}"])
     return "127.0.0.1"  # safe default; set FP_GATEWAY_HOST to advertise real host
 
+# --- registry backends -------------------------------------------------------
+# Two backends: JSONL file (single-host, zero deps) or Postgres (fleet-wide,
+# needs psycopg2 — optional import so the spawner still runs stdlib-only when
+# the DSN is unset).
+_pg = None
+if REGISTRY_DSN:
+    try:
+        import psycopg2, psycopg2.extras  # type: ignore
+        _pg = psycopg2
+    except ImportError:
+        _pg = None
+
+_REGISTRY_DDL = """
+CREATE TABLE IF NOT EXISTS spawn_registry (
+    agent_id     TEXT PRIMARY KEY,
+    container_id TEXT,
+    tier         TEXT,
+    mission      TEXT,
+    gateway_url  TEXT,
+    model        TEXT,
+    metadata     JSONB,
+    status       TEXT,
+    spawned_at   TIMESTAMPTZ,
+    destroyed_at TIMESTAMPTZ
+);
+"""
+
+def _pg_conn():
+    conn = _pg.connect(REGISTRY_DSN, connect_timeout=5)
+    conn.autocommit = True
+    return conn
+
+def _pg_init():
+    try:
+        with _pg_conn() as c, c.cursor() as cur:
+            cur.execute(_REGISTRY_DDL)
+    except Exception:
+        pass  # best-effort; a spawn must never block on the registry
+
 def _registry_write(record):
+    """Persist a spawn/destroy event. Postgres (fleet-wide) wins over JSONL."""
+    if _pg and REGISTRY_DSN:
+        try:
+            with _pg_conn() as c, c.cursor() as cur:
+                if record.get("event") == "spawn":
+                    cur.execute(
+                        """INSERT INTO spawn_registry
+                           (agent_id, container_id, tier, mission, gateway_url,
+                            model, metadata, status, spawned_at)
+                           VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                           ON CONFLICT (agent_id) DO UPDATE SET
+                             container_id=EXCLUDED.container_id, tier=EXCLUDED.tier,
+                             mission=EXCLUDED.mission, gateway_url=EXCLUDED.gateway_url,
+                             model=EXCLUDED.model, metadata=EXCLUDED.metadata,
+                             status=EXCLUDED.status, spawned_at=EXCLUDED.spawned_at,
+                             destroyed_at=NULL""",
+                        (record["agent_id"], record.get("container_id"), record.get("tier"),
+                         record.get("mission"), record.get("gateway_url"), record.get("model"),
+                         _pg.extras.Json(record.get("metadata") or {}), record.get("status"),
+                         record.get("spawned_at")),
+                    )
+                elif record.get("event") == "destroy":
+                    cur.execute(
+                        "UPDATE spawn_registry SET destroyed_at=%s, status='destroyed' WHERE agent_id=%s",
+                        (record.get("destroyed_at"), record["agent_id"]),
+                    )
+        except Exception:
+            pass
+        return
+    # JSONL fallback
     if not REGISTRY_PATH:
         return
     try:
@@ -65,6 +138,14 @@ def _registry_write(record):
         pass  # registry is best-effort; never block a spawn on it
 
 def _registry_read(agent_id):
+    if _pg and REGISTRY_DSN:
+        try:
+            with _pg_conn() as c, c.cursor(cursor_factory=_pg.extras.RealDictCursor) as cur:
+                cur.execute("SELECT * FROM spawn_registry WHERE agent_id=%s", (agent_id,))
+                row = cur.fetchone()
+                return dict(row) if row else None
+        except Exception:
+            return None
     if not REGISTRY_PATH or not os.path.exists(REGISTRY_PATH):
         return None
     try:
@@ -243,9 +324,12 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self.send_json(404, {"error": "use DELETE /agent/<id>"})
 
 if __name__ == "__main__":
+    if _pg and REGISTRY_DSN:
+        _pg_init()
     print(f"Flashpoint spawner starting on :{PORT}")
     print(f"Image: {IMAGE}")
     print(f"Decisions DB: {DECISIONS_HOST or '(disabled)'}")
-    print(f"Registry: {REGISTRY_PATH or '(disabled)'}")
+    registry_desc = "postgres" if (_pg and REGISTRY_DSN) else (REGISTRY_PATH or "(disabled)")
+    print(f"Registry: {registry_desc}")
     server = http.server.ThreadingHTTPServer(("0.0.0.0", PORT), Handler)
     server.serve_forever()

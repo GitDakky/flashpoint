@@ -54,9 +54,24 @@ GET /agent/fp-3f9a1c2b7d4e
 ```
 
 returns the stored spawn record (or live container state if the registry is
-disabled and the agent is still running). For a real multi-host deployment,
-point each spawner's registry at shared storage (or swap the JSONL writer for a
-Postgres insert) so ids resolve fleet-wide from any node.
+disabled and the agent is still running).
+
+### Fleet-wide registry (Postgres)
+
+On a multi-host deployment, a per-host JSONL file can only resolve its own ids.
+Set `FP_REGISTRY_DSN` instead and every spawner writes to a shared
+`spawn_registry` Postgres table (auto-created on startup; DDL also in
+`deploy/schema.sql`). Postgres takes precedence over the JSONL file. Now any
+spawner can resolve any agent's id fleet-wide, and you can query by wave/batch
+directly:
+
+```sql
+SELECT agent_id, status, spawned_at FROM spawn_registry
+WHERE metadata->>'wave' = '7' ORDER BY spawned_at;
+```
+
+The spawner imports `psycopg2` only when the DSN is set, so single-host installs
+still run stdlib-only with the JSONL registry.
 
 ## Decision-log linkage
 
