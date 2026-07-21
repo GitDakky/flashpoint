@@ -166,29 +166,32 @@ def generate_ideas(n, domains, constraints, model, key):
     return ideas[:n]
 
 
-def screen_ideas(ideas, model, key):
-    """Cheap kill-pass: drop obvious non-starters. Returns survivors with scores."""
-    kept = []
+def screen_ideas(ideas, model, key, keep_top=None, min_score=0):
+    """Cheap scoring pass. Scores every idea, then keeps the top `keep_top` by
+    combined score (and any scoring >= min_score). A rank-and-keep funnel, not a
+    hard kill, so the research gate always has material to work on."""
     for idea in ideas:
         prompt = (
             "You are a sceptical technical reviewer. Score this invention idea 0-10 on each of "
-            "novelty, feasibility, value (10 = best). Be harsh; most ideas are not new.\n\n"
+            "novelty, feasibility, value (10 = best). Be honest; most ideas are only partly new.\n\n"
             f"Title: {idea['title']}\nDescription: {idea['description']}\n"
             f"Mechanisms: {', '.join(idea['mechanisms'])}\n\n"
             'Return ONLY a JSON object {"novelty":int,"feasibility":int,"value":int,'
-            '"verdict":"keep"|"kill","reason":"one sentence"}.'
+            '"reason":"one sentence"}.'
         )
         try:
             o = _retry(lambda: _json_object(llm(prompt, model, key, max_tokens=300))) or {}
             idea["screen"] = o
-            if o.get("verdict") == "keep":
-                idea["screen_score"] = sum(int(o.get(k, 0) or 0) for k in ("novelty", "feasibility", "value"))
-                kept.append(idea)
+            idea["screen_score"] = sum(int(o.get(k, 0) or 0) for k in ("novelty", "feasibility", "value"))
         except Exception as e:
             print(f"  screen error {idea['id']}: {e}", file=sys.stderr)
+            idea["screen_score"] = 0
         time.sleep(0.3)
-    kept.sort(key=lambda x: x.get("screen_score", 0), reverse=True)
-    return kept
+    ranked = sorted(ideas, key=lambda x: x.get("screen_score", 0), reverse=True)
+    if keep_top is not None:
+        kept = [i for i in ranked[:keep_top] if i.get("screen_score", 0) >= min_score]
+        return kept
+    return [i for i in ranked if i.get("screen_score", 0) >= min_score]
 
 
 def research_ideas(ideas):
@@ -269,8 +272,7 @@ def main():
     print(f"  generated {len(ideas)}")
 
     print(f"\n[2/4] screening ({args.gen_model}) ...")
-    survivors = screen_ideas(ideas, args.gen_model, key)
-    survivors = survivors[: max(args.survivors, 1)]
+    survivors = screen_ideas(ideas, args.gen_model, key, keep_top=max(args.survivors, 1))
     print(f"  survivors: {len(survivors)}")
     for s in survivors:
         print(f"    + {s['id']} {s['title']} (screen {s.get('screen_score')})")
