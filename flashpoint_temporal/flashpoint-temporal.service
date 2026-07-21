@@ -1,0 +1,18 @@
+[Unit]
+Description=Flashpoint Temporal worker
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/flashpoint
+Environment=TEMPORAL_ADDRESS=localhost:7233
+Environment=TEMPORAL_NAMESPACE=default
+Environment=TEMPORAL_TASK_QUEUE=flashpoint
+Environment=FP_SPAWNER=http://127.0.0.1:2880
+# Environment=OPENROUTER_API_KEY=...
+ExecStart=/usr/bin/python3 -m flashpoint_temporal.worker
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

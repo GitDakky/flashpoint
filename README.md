@@ -87,6 +87,12 @@ curl -X POST http://localhost:2880/spawn \
   -d '{"mission":"analyse Q1 receipts","tier":"ephemeral"}'
 ```
 
+> **Deploy hands-off with an agent.** Hand your agentic system (Hermes, OpenClaw,
+> or any agent runtime) the ready-made, fully-detailed deployment prompt in
+> [`docs/agent-deploy-prompt.md`](docs/agent-deploy-prompt.md) and it will
+> install, build, configure, run and smoke-test Flashpoint on a target host with
+> no human involvement beyond supplying SSH access and two secrets.
+
 <details><summary><b>Manual setup</b> instead of deploy/runner.sh</summary>
 
 ```bash
@@ -122,6 +128,28 @@ The intake shards missions across every spawner you list and calls each one's
 `GET /batch/<id>` · `DELETE /batch/<id>`. Details in
 [`docs/intake.md`](docs/intake.md).
 
+## Durable waves with Temporal
+
+For production-scale waves, run the Temporal layer
+([`flashpoint_temporal/`](flashpoint_temporal/)). Temporal is the orchestration
+brain — durability, idempotency, rate-limiting, real-time visibility — and the
+spawner is the ignition muscle. Why Temporal and not Airflow: Flashpoint is an
+event-driven, sub-second, spawn-and-destroy system, not a scheduled batch
+pipeline; Airflow's DAG scheduler chokes on hundreds of thousands of dynamic
+short tasks, while Temporal is built for exactly this.
+
+```bash
+pip install -r flashpoint_temporal/requirements.txt
+python3 -m flashpoint_temporal.worker          # long-lived worker
+python3 -m flashpoint_temporal.start_wave \
+  --manifest intake/missions.example.json --wave wave-1 --max-concurrent 32
+```
+
+You get durable waves (a crashed worker replays to the exact failed agent),
+idempotent spawns keyed on `agent_id` (retries never double-spawn), guaranteed
+teardown in a `finally`, and a live per-agent dashboard in the Temporal UI. See
+[`flashpoint_temporal/README.md`](flashpoint_temporal/README.md).
+
 ## Repository layout
 
 | Path | What |
@@ -129,6 +157,7 @@ The intake shards missions across every spawner you list and calls each one's
 | `spawner/spawner.py` | Spawner API — spawn, spawn_batch, list, lookup, destroy (agent + batch) |
 | `spawner/.env.example` | Configuration template (never committed with real values) |
 | `spawner/as-spawner.service` | systemd unit |
+| `flashpoint_temporal/` | Temporal worker + `AgentWaveWorkflow` for durable waves |
 | `deploy/runner.sh` | One-command runner setup |
 | `deploy/schema.sql` | Postgres fleet-wide spawn-registry schema |
 | `agent/` | Agent Dockerfile + bootstrap (`entrypoint.sh`, decision logger, SOUL) |
@@ -144,8 +173,10 @@ The intake shards missions across every spawner you list and calls each one's
 | [`docs/architecture.md`](docs/architecture.md) | Components, flow, tiers, why it is fast |
 | [`docs/identity.md`](docs/identity.md) | agent_id, spawn records, registry, traceability |
 | [`docs/intake.md`](docs/intake.md) | Manifest / database / agent-generated mission intake |
+| [`docs/agent-deploy-prompt.md`](docs/agent-deploy-prompt.md) | Hands-off deployment prompt for agentic systems |
 | [`docs/scaling.md`](docs/scaling.md) | Compute + spawn-rate + LLM cost, 1 → 100 M agents |
 | [`docs/references.md`](docs/references.md) | Sources and assumptions behind the numbers |
+| [`flashpoint_temporal/README.md`](flashpoint_temporal/README.md) | Durable waves on Temporal |
 
 ## Security
 

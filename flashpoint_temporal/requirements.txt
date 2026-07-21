@@ -1,0 +1,5 @@
+# Flashpoint Temporal — Python dependencies for the worker + wave runner.
+# The core spawner stays stdlib-only; these are only needed to run the
+# Temporal orchestration layer.
+temporalio>=1.10,<2
+# psycopg2-binary  # uncomment if you also use the Postgres registry / DB intake
