@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 220" width="920" height="220" role="img" aria-label="Flashpoint">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0c0a1e"/>
+      <stop offset="100%" stop-color="#1a1235"/>
+    </linearGradient>
+    <radialGradient id="ignition" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.9"/>
+      <stop offset="45%" stop-color="#7C3AED" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#7C3AED" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="agentdot" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="titleGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="55%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+  </defs>
+
+  <rect width="920" height="220" fill="url(#bg)" rx="14"/>
+
+  <!-- drifting orbs -->
+  <circle cx="80" cy="60" r="70" fill="url(#ignition)" opacity="0.5">
+    <animate attributeName="cy" values="60;78;60" dur="9s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="850" cy="170" r="90" fill="url(#ignition)" opacity="0.4">
+    <animate attributeName="cy" values="170;150;170" dur="11s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- central ignition flash -->
+  <circle cx="460" cy="120" r="150" fill="url(#ignition)" opacity="0.55">
+    <animate attributeName="r" values="150;168;150" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.55;0.7;0.55" dur="6s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Title -->
+  <text x="460" y="102" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif"
+        font-size="56" font-weight="800" letter-spacing="2" fill="url(#titleGrad)">FLASHPOINT</text>
+  <text x="460" y="138" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif"
+        font-size="16" fill="#94A3B8" letter-spacing="1">thousands of ephemeral agents · one call · each one traceable</text>
+
+  <!-- agents igniting: dots fanning out from centre -->
+  <g>
+    <circle r="4" fill="url(#agentdot)">
+      <animateMotion dur="3s" repeatCount="indefinite" path="M460,150 C560,150 640,120 760,120"/>
+    </circle>
+    <circle r="4" fill="url(#agentdot)">
+      <animateMotion dur="3s" begin="0.5s" repeatCount="indefinite" path="M460,150 C560,150 640,180 760,180"/>
+    </circle>
+    <circle r="4" fill="url(#agentdot)">
+      <animateMotion dur="3s" begin="1s" repeatCount="indefinite" path="M460,150 C360,150 280,120 160,120"/>
+    </circle>
+    <circle r="4" fill="url(#agentdot)">
+      <animateMotion dur="3s" begin="1.5s" repeatCount="indefinite" path="M460,150 C360,150 280,180 160,180"/>
+    </circle>
+  </g>
+
+  <!-- ignition point -->
+  <circle cx="460" cy="150" r="6" fill="#06B6D4">
+    <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="460" cy="150" r="12" fill="none" stroke="#06B6D4" stroke-width="1.4" opacity="0.6">
+    <animate attributeName="r" values="12;26;12" dur="2.4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6;0;0.6" dur="2.4s" repeatCount="indefinite"/>
+  </circle>
+</svg>

@@ -1,0 +1,6 @@
+[
+  {"mission": "Summarise the Q1 receipts in the finance drive", "tier": "ephemeral", "agent_id": "wave-1-agent-00001", "metadata": {"wave": "1"}},
+  {"mission": "Summarise the Q2 receipts in the finance drive", "tier": "ephemeral", "agent_id": "wave-1-agent-00002", "metadata": {"wave": "1"}},
+  {"mission": "Extract action items from the Q3 board pack", "tier": "standard", "agent_id": "wave-1-agent-00003", "metadata": {"wave": "1"}},
+  {"mission": "Cross-reference Q4 invoices against EspoCRM", "tier": "standard", "agent_id": "wave-1-agent-00004", "metadata": {"wave": "1"}}
+]

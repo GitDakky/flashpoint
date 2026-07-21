@@ -258,6 +258,67 @@ def destroy_agent(agent_id):
                          "destroyed_at": datetime.datetime.now(datetime.timezone.utc).isoformat()})
     return ok
 
+# --- batches -----------------------------------------------------------------
+# A batch is a named group of agent_ids spawned together (e.g. from a mission
+# manifest). Stored in memory; persist batches yourself if you need them to
+# survive a spawner restart.
+_batches = {}
+
+def spawn_batch(batch_id, spawns, default_tier="ephemeral", default_model=None,
+                openrouter_key=None, max_parallel=8):
+    """Spawn many agents with bounded parallelism. Returns per-item results."""
+    batch_id = batch_id or f"batch-{secrets.token_hex(4)}"
+    results = []
+    lock = threading.Lock()
+
+    def work(item):
+        meta = dict(item.get("metadata") or {})
+        meta.setdefault("batch_id", batch_id)
+        try:
+            rec = spawn_agent(
+                mission=item.get("mission", "no mission specified"),
+                tier=item.get("tier", default_tier),
+                soul_override=item.get("soul"),
+                user_override=item.get("user"),
+                model=item.get("model", default_model),
+                agent_id=item.get("agent_id"),
+                openrouter_key=item.get("openrouter_key", openrouter_key),
+                metadata=meta,
+            )
+            out = {"ok": True, "agent_id": rec["agent_id"], "gateway_url": rec.get("gateway_url")}
+        except Exception as e:
+            out = {"ok": False, "agent_id": item.get("agent_id"), "error": str(e)}
+        with lock:
+            results.append(out)
+
+    threads = []
+    for item in spawns:
+        while threading.active_count() - 1 >= max_parallel:
+            time.sleep(0.01)
+        t = threading.Thread(target=work, args=(item,), daemon=True)
+        t.start()
+        threads.append(t)
+    for t in threads:
+        t.join()
+
+    _batches[batch_id] = {
+        "batch_id": batch_id,
+        "count": len(results),
+        "ok": sum(1 for r in results if r.get("ok")),
+        "failed": sum(1 for r in results if not r.get("ok")),
+        "agent_ids": [r.get("agent_id") for r in results if r.get("ok")],
+        "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    }
+    return {"batch_id": batch_id, "results": results, **_batches[batch_id]}
+
+def destroy_batch(batch_id):
+    batch = _batches.get(batch_id)
+    ids = batch["agent_ids"] if batch else None
+    if ids is None:
+        return None
+    destroyed = [aid for aid in ids if destroy_agent(aid)]
+    return {"batch_id": batch_id, "destroyed": len(destroyed), "agent_ids": destroyed}
+
 class Handler(http.server.BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
         pass  # suppress default logging
@@ -278,6 +339,9 @@ class Handler(http.server.BaseHTTPRequestHandler):
         elif path == "/agents":
             agents = list_agents()
             self.send_json(200, {"agents": agents, "count": len(agents)})
+        elif len(parts) == 2 and parts[0] == "batch":
+            b = _batches.get(parts[1])
+            self.send_json(200 if b else 404, b or {"error": "batch not found"})
         elif len(parts) == 2 and parts[0] == "agent":
             rec = _registry_read(parts[1])
             if rec:
@@ -294,9 +358,9 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
     def do_POST(self):
         path = urlparse(self.path).path
+        length = int(self.headers.get("Content-Length", 0))
+        body = json.loads(self.rfile.read(length)) if length else {}
         if path == "/spawn":
-            length = int(self.headers.get("Content-Length", 0))
-            body   = json.loads(self.rfile.read(length)) if length else {}
             try:
                 result = spawn_agent(
                     mission       = body.get("mission", "no mission specified"),
@@ -311,6 +375,23 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 self.send_json(201, result)
             except Exception as e:
                 self.send_json(500, {"error": str(e)})
+        elif path == "/spawn_batch":
+            try:
+                spawns = body.get("spawns", [])
+                if not isinstance(spawns, list) or not spawns:
+                    self.send_json(400, {"error": "spawns must be a non-empty list"})
+                    return
+                result = spawn_batch(
+                    batch_id      = body.get("batch_id"),
+                    spawns        = spawns,
+                    default_tier  = body.get("tier", "ephemeral"),
+                    default_model = body.get("model"),
+                    openrouter_key= body.get("openrouter_key"),
+                    max_parallel  = int(body.get("max_parallel", 8)),
+                )
+                self.send_json(201, result)
+            except Exception as e:
+                self.send_json(500, {"error": str(e)})
         else:
             self.send_json(404, {"error": "not found"})
 
@@ -320,8 +401,11 @@ class Handler(http.server.BaseHTTPRequestHandler):
         if len(parts) == 2 and parts[0] == "agent":
             ok = destroy_agent(parts[1])
             self.send_json(200 if ok else 404, {"destroyed": ok, "agent_id": parts[1]})
+        elif len(parts) == 2 and parts[0] == "batch":
+            res = destroy_batch(parts[1])
+            self.send_json(200 if res else 404, res or {"error": "batch not found"})
         else:
-            self.send_json(404, {"error": "use DELETE /agent/<id>"})
+            self.send_json(404, {"error": "use DELETE /agent/<id> or /batch/<id>"})
 
 if __name__ == "__main__":
     if _pg and REGISTRY_DSN:

@@ -1,0 +1,5 @@
+mission,tier,agent_id
+Summarise the Q1 receipts in the finance drive,ephemeral,wave-1-agent-00001
+Summarise the Q2 receipts in the finance drive,ephemeral,wave-1-agent-00002
+Extract action items from the Q3 board pack,standard,wave-1-agent-00003
+Cross-reference Q4 invoices against EspoCRM,standard,wave-1-agent-00004

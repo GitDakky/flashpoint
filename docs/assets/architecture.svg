@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 380" width="920" height="380" role="img" aria-label="Flashpoint architecture">
+  <defs>
+    <linearGradient id="abg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0c0a1e"/>
+      <stop offset="100%" stop-color="#141026"/>
+    </linearGradient>
+    <linearGradient id="spawnEdge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+    <radialGradient id="apulse" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="dbpulse" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#22C55E"/>
+      <stop offset="100%" stop-color="#22C55E" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="card" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  <rect width="920" height="380" fill="url(#abg)" rx="14"/>
+
+  <!-- Node: Orchestrator -->
+  <g filter="url(#card)">
+    <rect x="40" y="150" width="180" height="90" rx="12" fill="#1a1235" stroke="#7C3AED" stroke-width="1.5"/>
+    <text x="130" y="185" text-anchor="middle" fill="#F8FAFC" font-family="ui-sans-serif,system-ui" font-size="15" font-weight="700">Orchestrator</text>
+    <text x="130" y="206" text-anchor="middle" fill="#94A3B8" font-family="ui-sans-serif,system-ui" font-size="11">missions in</text>
+    <text x="130" y="222" text-anchor="middle" fill="#94A3B8" font-family="ui-sans-serif,system-ui" font-size="11">long-lived</text>
+  </g>
+
+  <!-- Node: Spawner -->
+  <g filter="url(#card)">
+    <rect x="370" y="150" width="180" height="90" rx="12" fill="#1a1235" stroke="#06B6D4" stroke-width="1.5"/>
+    <text x="460" y="185" text-anchor="middle" fill="#F8FAFC" font-family="ui-sans-serif,system-ui" font-size="15" font-weight="700">Spawner API</text>
+    <text x="460" y="206" text-anchor="middle" fill="#94A3B8" font-family="ui-sans-serif,system-ui" font-size="11">spawn · list · lookup · destroy</text>
+    <text x="460" y="222" text-anchor="middle" fill="#06B6D4" font-family="ui-sans-serif,system-ui" font-size="11">stateless :2880</text>
+  </g>
+
+  <!-- Node: Agents (ephemeral) -->
+  <g filter="url(#card)">
+    <rect x="700" y="60" width="180" height="90" rx="12" fill="#1a1235" stroke="#7C3AED" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="790" y="95" text-anchor="middle" fill="#F8FAFC" font-family="ui-sans-serif,system-ui" font-size="15" font-weight="700">Agents</text>
+    <text x="790" y="116" text-anchor="middle" fill="#94A3B8" font-family="ui-sans-serif,system-ui" font-size="11">ephemeral containers</text>
+    <text x="790" y="132" text-anchor="middle" fill="#94A3B8" font-family="ui-sans-serif,system-ui" font-size="11">one per mission</text>
+  </g>
+
+  <!-- Node: Decisions DB -->
+  <g filter="url(#card)">
+    <rect x="700" y="240" width="180" height="90" rx="12" fill="#1a1235" stroke="#22C55E" stroke-width="1.5"/>
+    <text x="790" y="275" text-anchor="middle" fill="#F8FAFC" font-family="ui-sans-serif,system-ui" font-size="15" font-weight="700">Decisions DB</text>
+    <text x="790" y="296" text-anchor="middle" fill="#94A3B8" font-family="ui-sans-serif,system-ui" font-size="11">Postgres + pgvector</text>
+    <text x="790" y="312" text-anchor="middle" fill="#94A3B8" font-family="ui-sans-serif,system-ui" font-size="11">survives teardown</text>
+  </g>
+
+  <!-- spawn edge: orchestrator -> spawner -->
+  <path id="e1" d="M220,195 C290,195 300,195 370,195" fill="none" stroke="url(#spawnEdge)" stroke-width="1.6"/>
+  <text x="295" y="185" text-anchor="middle" fill="#06B6D4" font-family="ui-sans-serif,system-ui" font-size="10">POST /spawn</text>
+
+  <!-- spawner -> agents -->
+  <path id="e2" d="M550,180 C620,170 630,120 700,110" fill="none" stroke="url(#spawnEdge)" stroke-width="1.6"/>
+  <text x="620" y="128" text-anchor="middle" fill="#7C3AED" font-family="ui-sans-serif,system-ui" font-size="10">docker run</text>
+
+  <!-- agents -> decisions -->
+  <path id="e3" d="M790,150 C790,180 790,200 790,240" fill="none" stroke="#22C55E" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <text x="812" y="200" text-anchor="start" fill="#22C55E" font-family="ui-sans-serif,system-ui" font-size="10">decisions</text>
+
+  <!-- destroy edge -->
+  <path id="e4" d="M700,128 C620,140 610,190 550,200" fill="none" stroke="#7C3AED" stroke-width="1" stroke-dasharray="3 4" opacity="0.6"/>
+  <text x="620" y="212" text-anchor="middle" fill="#94A3B8" font-family="ui-sans-serif,system-ui" font-size="9">DELETE /agent/id</text>
+
+  <!-- animated pulses -->
+  <circle r="4.5" fill="url(#apulse)"><animateMotion dur="2s" repeatCount="indefinite" path="M220,195 C290,195 300,195 370,195"/></circle>
+  <circle r="4.5" fill="url(#apulse)"><animateMotion dur="2.4s" begin="0.5s" repeatCount="indefinite" path="M550,180 C620,170 630,120 700,110"/></circle>
+  <circle r="4" fill="url(#dbpulse)"><animateMotion dur="2.2s" begin="0.3s" repeatCount="indefinite" path="M790,150 C790,180 790,200 790,240"/></circle>
+
+  <!-- captions -->
+  <text x="40" y="330" fill="#64748B" font-family="ui-sans-serif,system-ui" font-size="11">
+    spawn is one docker run · teardown is docker stop+rm · decisions written out-of-band so nothing is reconciled
+  </text>
+</svg>

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 300" width="920" height="300" role="img" aria-label="Flashpoint identity and traceability chain">
+  <defs>
+    <linearGradient id="ibg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0c0a1e"/>
+      <stop offset="100%" stop-color="#141026"/>
+    </linearGradient>
+    <radialGradient id="ipulse" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="icard" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  <rect width="920" height="300" fill="url(#ibg)" rx="14"/>
+
+  <!-- the id at the centre -->
+  <g filter="url(#icard)">
+    <rect x="330" y="105" width="260" height="90" rx="12" fill="#1a1235" stroke="#06B6D4" stroke-width="2"/>
+    <text x="460" y="145" text-anchor="middle" fill="#06B6D4" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="22" font-weight="800">fp-3f9a1c2b7d</text>
+    <text x="460" y="172" text-anchor="middle" fill="#94A3B8" font-family="ui-sans-serif,system-ui" font-size="12">one id · every reference</text>
+  </g>
+
+  <!-- four anchors -->
+  <g font-family="ui-sans-serif,system-ui" font-size="12" fill="#F8FAFC" text-anchor="middle">
+    <g filter="url(#icard)">
+      <rect x="40" y="40" width="200" height="60" rx="10" fill="#1a1235" stroke="#7C3AED"/>
+      <text x="140" y="66" fill="#F8FAFC" font-weight="700">spawn record</text>
+      <text x="140" y="86" fill="#94A3B8" font-size="10">registry / DB</text>
+    </g>
+    <g filter="url(#icard)">
+      <rect x="40" y="200" width="200" height="60" rx="10" fill="#1a1235" stroke="#7C3AED"/>
+      <text x="140" y="226" fill="#F8FAFC" font-weight="700">live container</text>
+      <text x="140" y="246" fill="#94A3B8" font-size="10">docker label + hostname</text>
+    </g>
+    <g filter="url(#icard)">
+      <rect x="680" y="40" width="200" height="60" rx="10" fill="#1a1235" stroke="#06B6D4"/>
+      <text x="780" y="66" fill="#F8FAFC" font-weight="700">gateway</text>
+      <text x="780" y="86" fill="#94A3B8" font-size="10">url + token</text>
+    </g>
+    <g filter="url(#icard)">
+      <rect x="680" y="200" width="200" height="60" rx="10" fill="#1a1235" stroke="#22C55E"/>
+      <text x="780" y="226" fill="#F8FAFC" font-weight="700">decision rows</text>
+      <text x="780" y="246" fill="#94A3B8" font-size="10">agent_decisions.agent_id</text>
+    </g>
+  </g>
+
+  <!-- connector paths -->
+  <path id="c1" d="M240,70 C300,70 320,110 330,120" fill="none" stroke="#7C3AED" stroke-width="1.4" opacity="0.7"/>
+  <path id="c2" d="M240,230 C300,230 320,190 330,180" fill="none" stroke="#7C3AED" stroke-width="1.4" opacity="0.7"/>
+  <path id="c3" d="M680,70 C620,70 600,110 590,120" fill="none" stroke="#06B6D4" stroke-width="1.4" opacity="0.7"/>
+  <path id="c4" d="M680,230 C620,230 600,190 590,180" fill="none" stroke="#22C55E" stroke-width="1.4" opacity="0.7"/>
+
+  <!-- pulses flowing into the id -->
+  <circle r="4" fill="url(#ipulse)"><animateMotion dur="2.4s" repeatCount="indefinite" path="M240,70 C300,70 320,110 330,120"/></circle>
+  <circle r="4" fill="url(#ipulse)"><animateMotion dur="2.4s" begin="0.6s" repeatCount="indefinite" path="M240,230 C300,230 320,190 330,180"/></circle>
+  <circle r="4" fill="url(#ipulse)"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite" path="M680,70 C620,70 600,110 590,120"/></circle>
+  <circle r="4" fill="url(#ipulse)"><animateMotion dur="2.4s" begin="1.8s" repeatCount="indefinite" path="M680,230 C620,230 600,190 590,180"/></circle>
+
+  <!-- centre breathing -->
+  <circle cx="460" cy="150" r="118" fill="none" stroke="#06B6D4" stroke-width="1" opacity="0.25">
+    <animate attributeName="r" values="118;126;118" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.25;0.05;0.25" dur="3s" repeatCount="indefinite"/>
+  </circle>
+</svg>
