@@ -1,0 +1,255 @@
+{
+  "idea": "Egress Crowd Governor \u2014 defensible kernel",
+  "mechanisms": [
+    {
+      "mechanism": "single-flight request coalescing cache stampede",
+      "arxiv": [
+        {
+          "source": "arxiv",
+          "title": "Using Cache-coloring to Mitigate Inter-set Write Variation in Non-volatile Caches",
+          "id": "1310.8494v1",
+          "url": "http://arxiv.org/abs/1310.8494v1",
+          "published": "2013-10-31",
+          "snippet": "In recent years, researchers have explored use of non-volatile devices such as STT-RAM (spin torque transfer RAM) for designing on-chip caches, since they provide high density and consume low leakage power. A common limitation of all non-volatile devices is their limited write endurance. Further, since existing cache management policies are write-variation unaware, excessive writes to a few blocks"
+        },
+        {
+          "source": "arxiv",
+          "title": "Dynamic cache reconfiguration based techniques for improving cache energy efficiency",
+          "id": "1310.4231v1",
+          "url": "http://arxiv.org/abs/1310.4231v1",
+          "published": "2013-10-16",
+          "snippet": "Modern multicore processors are employing large last-level caches, for example Intel's E7-8800 processor uses 24MB L3 cache. Further, with each CMOS technology generation, leakage energy has been dramatically increasing and hence, leakage energy is expected to become a major source of energy dissipation, especially in last-level caches (LLCs). The conventional schemes of cache energy saving either"
+        },
+        {
+          "source": "arxiv",
+          "title": "dKV-Cache: The Cache for Diffusion Language Models",
+          "id": "2505.15781v1",
+          "url": "http://arxiv.org/abs/2505.15781v1",
+          "published": "2025-05-21",
+          "snippet": "Diffusion Language Models (DLMs) have been seen as a promising competitor for autoregressive language models. However, diffusion language models have long been constrained by slow inference. A core challenge is that their non-autoregressive architecture and bidirectional attention preclude the key-value cache that accelerates decoding. We address this bottleneck by proposing a KV-cache-like mechan"
+        }
+      ],
+      "semantic_scholar": [],
+      "web": [
+        {
+          "source": "web",
+          "title": "Request coalescing : r/golang",
+          "url": "https://www.reddit.com/r/golang/comments/1uhqvyx/request_coalescing",
+          "snippet": "Request coalescing is a pretty neat technique in distsys where you gate a cache with a singleflight. It prevents cache stampedes where multiple"
+        },
+        {
+          "source": "web",
+          "title": "#golang #backendengineering #systemdesign #concurrency #softwarearchitecture | Amit Kishor Raturi | 18 comments",
+          "url": "https://www.linkedin.com/posts/akraturi_golang-backendengineering-systemdesign-activity-7412730878826807296-k-77",
+          "snippet": "If 1,000 users request the exact same dashboard report at the same millisecond, does your service execute the query 1,000 times? It is a mechanism for Request Coalescing. If 10 requests come in for \"User\\_123\", singleflight executes the DB query once and shares the result with all 10 waiting callers. \ud83d\ude80 Have you used request coalescing in production yet? Let's say 50+ calls are for the same key, it"
+        },
+        {
+          "source": "web",
+          "title": "Cache stampede can crash your entire system in seconds ...",
+          "url": "https://www.instagram.com/reel/DU5qI2GiLCc",
+          "snippet": "4. Request coalescing \u2014 merge duplicate in-flight requests for the same key into one. The senior-dev signal isn't knowing what caching is."
+        }
+      ]
+    },
+    {
+      "mechanism": "request deduplication authorization scope equivalence",
+      "arxiv": [
+        {
+          "source": "arxiv",
+          "title": "Accelerating Data Chunking in Deduplication Systems using Vector Instructions",
+          "id": "2508.05797v2",
+          "url": "http://arxiv.org/abs/2508.05797v2",
+          "published": "2025-08-07",
+          "snippet": "Content-defined Chunking (CDC) algorithms dictate the overall space savings that deduplication systems achieve. However, due to their need to scan each file in its entirety, they are slow and often the main performance bottleneck within data deduplication. We present VectorCDC, a method to accelerate hashless CDC algorithms using vector CPU instructions, such as SSE / AVX. We analyzed the state-of"
+        },
+        {
+          "source": "arxiv",
+          "title": "Delegated Authorization for Agents Constrained to Semantic Task-to-Scope Matching",
+          "id": "2510.26702v1",
+          "url": "http://arxiv.org/abs/2510.26702v1",
+          "published": "2025-10-30",
+          "snippet": "Authorizing Large Language Model driven agents to dynamically invoke tools and access protected resources introduces significant risks, since current methods for delegating authorization grant overly broad permissions and give access to tools allowing agents to operate beyond the intended task scope. We introduce and assess a delegated authorization model enabling authorization servers to semantic"
+        },
+        {
+          "source": "arxiv",
+          "title": "Multiple Plans are Better than One: Diverse Stochastic Planning",
+          "id": "2012.15485v1",
+          "url": "http://arxiv.org/abs/2012.15485v1",
+          "published": "2020-12-31",
+          "snippet": "In planning problems, it is often challenging to fully model the desired specifications. In particular, in human-robot interaction, such difficulty may arise due to human's preferences that are either private or complex to model. Consequently, the resulting objective function can only partially capture the specifications and optimizing that may lead to poor performance with respect to the true spe"
+        }
+      ],
+      "semantic_scholar": [],
+      "web": [
+        {
+          "source": "web",
+          "title": "Patent Scope and Innovation in the Software Industry - Journal Article - Stanford Law School",
+          "url": "https://law.stanford.edu/publications/patent-scope-and-innovation-in-the-software-industry",
+          "snippet": "Software patents have received a great deal of attention in the academic literature. Unfortunately, most of that attention has been devoted to the problem of whether software is or should be patentable subject matter. With roughly 40,000 software patents already issued, and the Federal Circuit endorsing patentability without qualification, those questions are for the history books. The more pressi"
+        },
+        {
+          "source": "web",
+          "title": "(PDF) Patent Scope and Innovation in the Software Industry",
+          "url": "https://www.academia.edu/165324008/Patent_Scope_and_Innovation_in_the_Software_Industry",
+          "snippet": "Title: (PDF) Patent Scope and Innovation in the Software Industry\nPatent Scope and Innovation in the. Designing Around Existing Software Patents. A Critical View of Software Patents. On Abstraction and Equivalence in Software Patent Doctrine:\u00a0 A Response to Bessen, Meurer and Klemens, 16 J. The Use of USPTO \u201cContinuation\u201d Applications in the Patenting of Software: Implications for Free and Open So"
+        },
+        {
+          "source": "web",
+          "title": "Could it be patent infringement for a product that has a different design but same result?",
+          "url": "https://www.quora.com/Could-it-be-patent-infringement-for-a-product-that-has-a-different-design-but-same-result",
+          "snippet": "# Could it be patent infringement for a product that has a different design but same result? Could it be patent infringement for a product that has a different design but same result? Patent infringement is a question answered by comparing the proposed product to the claims of a patent of another. If the patent is a utility patent, and the design is different, then the claimed components are proba"
+        }
+      ]
+    },
+    {
+      "mechanism": "tamper-evident append-only audit log receipts",
+      "arxiv": [
+        {
+          "source": "arxiv",
+          "title": "Rethinking Tamper-Evident Logging: A High-Performance, Co-Designed Auditing System",
+          "id": "2509.03821v2",
+          "url": "http://arxiv.org/abs/2509.03821v2",
+          "published": "2025-09-04",
+          "snippet": "Existing tamper-evident logging systems suffer from high overhead and severe data loss in high-load settings, yet only provide coarse-grained tamper detection. Moreover, installing such systems requires recompiling kernel code. To address these challenges, we present Nitro, a high-performance, tamper-evident audit logging system that supports fine-grained detection of log tampering. Even better, o"
+        },
+        {
+          "source": "arxiv",
+          "title": "Aegon: Auditable AI Content Access with Ledger-Bound Tokens and Hardware-Attested Mobile Receipts",
+          "id": "2604.06693v1",
+          "url": "http://arxiv.org/abs/2604.06693v1",
+          "published": "2026-04-08",
+          "snippet": "Recent standards such as RSL address AI content policy declaration -- telling AI systems what the licensing terms are. However, no existing system provides audit infrastructure -- tamper-evident licensing transaction records with independently verifiable proofs that those records have not been retroactively modified. We describe Aegon, a protocol that extends standard JWT tokens with content-speci"
+        },
+        {
+          "source": "arxiv",
+          "title": "Accountability of Things: Large-Scale Tamper-Evident Logging for Smart Devices",
+          "id": "2308.05557v1",
+          "url": "http://arxiv.org/abs/2308.05557v1",
+          "published": "2023-08-10",
+          "snippet": "Our modern world relies on a growing number of interconnected and interacting devices, leading to a plethora of logs establishing audit trails for all kinds of events. Simultaneously, logs become increasingly important for forensic investigations, and thus, an adversary will aim to alter logs to avoid culpability, e.g., by compromising devices that generate and store logs. Thus, it is essential to"
+        }
+      ],
+      "semantic_scholar": [],
+      "web": [
+        {
+          "source": "web",
+          "title": "An open-source append only ledger | Trillian",
+          "url": "https://transparency.dev",
+          "snippet": "# Trust your data with a tamper-evident log. **You need to trust the data you rely on.** Your organisation handles more data every day, and the data helps you make critical decisions. Building with tamper-evident logs means you can **cryptographically prove that the data hasn\u2019t been unexpectedly changed**. Knowing the provenance, integrity and sequence your data was created means you\u2019ll be able to"
+        },
+        {
+          "source": "web",
+          "title": "Audit Log System Design: Building Tamper-Proof, ...",
+          "url": "https://codelit.io/blog/audit-log-system-design",
+          "snippet": "Mar 28, 2026 \u2014 How to design tamper-proof audit logs: what to capture and redact, immutable append-only storage, and meeting SOC 2 and HIPAA compliance"
+        },
+        {
+          "source": "web",
+          "title": "18 Tips to Implement Tamper-Proof Audit Logs | Mattermost",
+          "url": "https://mattermost.com/blog/compliance-by-design-18-tips-to-implement-tamper-proof-audit-logs",
+          "snippet": "# Compliance by Design: 18 Tips to Implement Tamper-Proof Audit Logs. Audit logs are where security, operations, and compliance meet. When an incident happens or an auditor asks for evidence, your logs are how you prove who did what, when it happened, and what the outcome was. Ensuring that these audit logs are accurate, reliable, and tamper-proof is critical. \u201cTamper-proof\u201d audit logs don\u2019t happe"
+        }
+      ]
+    },
+    {
+      "mechanism": "credential broker least privilege token exchange",
+      "arxiv": [
+        {
+          "source": "arxiv",
+          "title": "Decoupling Identity from Access: Credential Broker Patterns for Secure CI/CD",
+          "id": "2504.14761v1",
+          "url": "http://arxiv.org/abs/2504.14761v1",
+          "published": "2025-04-20",
+          "snippet": "Credential brokers offer a way to separate identity from access in CI/CD systems. This paper shows how verifiable identities issued at runtime, such as those from SPIFFE, can be used with brokers to enable short-lived, policy-driven credentials for pipelines and workloads. We walk through practical design patterns, including brokers that issue tokens just in time, apply access policies, and operat"
+        },
+        {
+          "source": "arxiv",
+          "title": "Multi-modal Crowd Counting via a Broker Modality",
+          "id": "2407.07518v1",
+          "url": "http://arxiv.org/abs/2407.07518v1",
+          "published": "2024-07-10",
+          "snippet": "Multi-modal crowd counting involves estimating crowd density from both visual and thermal/depth images. This task is challenging due to the significant gap between these distinct modalities. In this paper, we propose a novel approach by introducing an auxiliary broker modality and on this basis frame the task as a triple-modal learning problem. We devise a fusion-based method to generate this brok"
+        },
+        {
+          "source": "arxiv",
+          "title": "No More, No Less: Least-Privilege Language Models",
+          "id": "2601.23157v2",
+          "url": "http://arxiv.org/abs/2601.23157v2",
+          "published": "2026-01-30",
+          "snippet": "Least privilege is a core security principle: grant each request only the minimum access needed to achieve its goal. Deployed language models almost never follow it, instead being exposed through a single API endpoint that serves all users and requests. This gap exists not because least privilege would be unhelpful; deployments would benefit greatly from reducing unnecessary capability exposure. T"
+        }
+      ],
+      "semantic_scholar": [],
+      "web": [
+        {
+          "source": "web",
+          "title": "1Password Introduces Credential Broker, Building a Secure Credentialing Layer for Humans, Machines, and AI Agents | 1Password",
+          "url": "https://1password.com/press/2026/june/credential-broker",
+          "snippet": "*Building on the 1Password vault trusted by more than 180,000 businesses, including GitHub, MongoDB, Salesforce, and Wiz, the new 1Password Credential Broker brokers trusted access from 1Password at the time of need, helping organizations keep secrets out of apps, code, pipelines, and agent workflows.*. **TORONTO \u2013** 1Password, a leader in identity security, today announced 1Password Credential Br"
+        },
+        {
+          "source": "web",
+          "title": "Systems and methods for providing verifiable credentials",
+          "url": "https://patents.google.com/patent/US20230164143A1/en",
+          "snippet": "In an embodiment, systems, methods, and computer-readable mediums for creating applications that issue and verify verifiable credentials are provided."
+        },
+        {
+          "source": "web",
+          "title": "Decoupling Identity from Access: Credential Broker Patterns for Secure CI/CD",
+          "url": "https://arxiv.org/html/2504.14761v1",
+          "snippet": "# Decoupling Identity from Access: Credential Broker Patterns for Secure CI/CD. In modern CI/CD systems, workload identity alone is not sufficient to enforce secure access. While SPIFFE provides runtime-issued, verifiable identities for ephemeral jobs and workloads, these identities must be mapped to actual access rights\u2014often cloud roles, secrets, or APIs. Without a layer in between, the identity"
+        }
+      ]
+    },
+    {
+      "mechanism": "content-addressed canonical request fingerprint",
+      "arxiv": [
+        {
+          "source": "arxiv",
+          "title": "RouteMark: A Fingerprint for Intellectual Property Attribution in Routing-based Model Merging",
+          "id": "2508.01784v1",
+          "url": "http://arxiv.org/abs/2508.01784v1",
+          "published": "2025-08-03",
+          "snippet": "Model merging via Mixture-of-Experts (MoE) has emerged as a scalable solution for consolidating multiple task-specific models into a unified sparse architecture, where each expert is derived from a model fine-tuned on a distinct task. While effective for multi-task integration, this paradigm introduces a critical yet underexplored challenge: how to attribute and protect the intellectual property ("
+        },
+        {
+          "source": "arxiv",
+          "title": "Boosting Generalization with Adaptive Style Techniques for Fingerprint Liveness Detection",
+          "id": "2310.13573v3",
+          "url": "http://arxiv.org/abs/2310.13573v3",
+          "published": "2023-10-20",
+          "snippet": "We introduce a high-performance fingerprint liveness feature extraction technique that secured first place in LivDet 2023 Fingerprint Representation Challenge. Additionally, we developed a practical fingerprint recognition system with 94.68% accuracy, earning second place in LivDet 2023 Liveness Detection in Action. By investigating various methods, particularly style transfer, we demonstrate impr"
+        },
+        {
+          "source": "arxiv",
+          "title": "Unbalanced Fingerprint Classification for Hybrid Fingerprint Orientation Maps",
+          "id": "2409.00779v1",
+          "url": "http://arxiv.org/abs/2409.00779v1",
+          "published": "2024-09-01",
+          "snippet": "This paper introduces a novel fingerprint classification technique based on a multi-layered fuzzy logic classifier. We target the cause of missed detection by identifying the fingerprints at an early stage among dry, standard, and wet. Scanned images are classified based on clarity correlated with the proposed feature points. We also propose a novel adaptive algorithm based on eigenvector space fo"
+        }
+      ],
+      "semantic_scholar": [],
+      "web": [
+        {
+          "source": "web",
+          "title": "fingerprint based address entry",
+          "url": "https://patents.justia.com/patent/20190362398",
+          "snippet": "Embodiments of the present invention can be used to request a live scan of a fingerprint, identify a stored address based on the fingerprint,"
+        },
+        {
+          "source": "web",
+          "title": "Generating synthetic invisible fingerprints for metadata ...",
+          "url": "https://patents.google.com/patent/US12225136B2/en",
+          "snippet": "Aspects of the disclosure relate to generating synthetic invisible fingerprints for metadata security and document verification using"
+        },
+        {
+          "source": "web",
+          "title": "Patents",
+          "url": "https://pomcor.com/patents",
+          "snippet": "These patents describe a method and a system for multifactor identification of a subject over a network using a rich credential."
+        }
+      ]
+    }
+  ]
+}
