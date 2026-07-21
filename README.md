@@ -38,7 +38,9 @@ the work is done. Measured on a single runner: **spawn ~1.3 s · gateway ready
 ~7 s · destroy ~1.9 s**. Because the spawner is stateless, you shard it across
 runners and the wall-clock to ignite a wave stays roughly flat as the fleet
 grows. The full 1 → 100,000,000-agent compute and cost model is in
-[`docs/scaling.md`](docs/scaling.md).
+[`docs/scaling.md`](docs/scaling.md), and concrete patterns (estate audits,
+document processing, parallel research, mass repo changes, simulation,
+durable waves) are in [`docs/use-cases.md`](docs/use-cases.md).
 
 ## Architecture
 
@@ -177,6 +179,7 @@ teardown in a `finally`, and a live per-agent dashboard in the Temporal UI. See
 | Doc | Contents |
 |---|---|
 | [`docs/architecture.md`](docs/architecture.md) | Components, flow, tiers, why it is fast |
+| [`docs/use-cases.md`](docs/use-cases.md) | Worked examples: audits, documents, research, repos, simulation, waves |
 | [`docs/identity.md`](docs/identity.md) | agent_id, spawn records, registry, traceability |
 | [`docs/intake.md`](docs/intake.md) | Manifest / database / agent-generated mission intake |
 | [`docs/agent-deploy-prompt.md`](docs/agent-deploy-prompt.md) | Hands-off deployment prompt for agentic systems |
