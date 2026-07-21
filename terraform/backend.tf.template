@@ -1,0 +1,14 @@
+terraform {
+  # Optional HTTP (GitLab) remote state backend. Copy to backend.tf inside an
+  # agent workspace and substitute your own values (never commit credentials).
+  backend "http" {
+    address        = "https://gitlab.example.com/api/v4/projects/PROJECT_ID/terraform/state/AGENT_NAME"
+    lock_address   = "https://gitlab.example.com/api/v4/projects/PROJECT_ID/terraform/state/AGENT_NAME/lock"
+    unlock_address = "https://gitlab.example.com/api/v4/projects/PROJECT_ID/terraform/state/AGENT_NAME/lock"
+    username       = "GITLAB_USER"
+    password       = "GITLAB_TOKEN"
+    lock_method    = "POST"
+    unlock_method  = "DELETE"
+    retry_wait_min = 5
+  }
+}

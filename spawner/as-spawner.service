@@ -1,0 +1,16 @@
+[Unit]
+Description=Flashpoint Agent Spawner API
+After=docker.service network.target
+Requires=docker.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/flashpoint/spawner.py
+Restart=always
+RestartSec=5
+# Configuration lives in /opt/flashpoint/.env (see .env.example). Do NOT put
+# credentials in this unit file.
+EnvironmentFile=-/opt/flashpoint/.env
+
+[Install]
+WantedBy=multi-user.target

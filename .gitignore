@@ -1,0 +1,29 @@
+# secrets — never commit
+.env
+*.env
+!.env.example
+.proxmox.env
+.proxmox.env.*
+
+# terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+!terraform/agents/example/terraform.tfvars
+.terraform.lock.hcl
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# os
+.DS_Store
+
+# registry / runtime
+*.jsonl
+registry.jsonl
