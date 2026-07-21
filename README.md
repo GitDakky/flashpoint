@@ -170,6 +170,7 @@ teardown in a `finally`, and a live per-agent dashboard in the Temporal UI. See
 | `deploy/schema.sql` | Postgres fleet-wide spawn-registry schema |
 | `agent/` | Agent Dockerfile + bootstrap (`entrypoint.sh`, decision logger, SOUL) |
 | `intake/` | Mission-intake CLI + example manifest/CSV |
+| `invention/` | Invention pipeline (generate → screen → research gate → backtest) + seeds |
 | `terraform/` | Optional LXC-clone path for full-OS agents |
 | `examples/` | Parallel wave spawn/destroy example |
 | `docs/` | Architecture, identity, intake, scaling, references |
@@ -180,6 +181,7 @@ teardown in a `finally`, and a live per-agent dashboard in the Temporal UI. See
 |---|---|
 | [`docs/architecture.md`](docs/architecture.md) | Components, flow, tiers, why it is fast |
 | [`docs/use-cases.md`](docs/use-cases.md) | Worked examples: audits, documents, research, repos, simulation, waves |
+| [`docs/invention.md`](docs/invention.md) | Invention pipeline: frog-leap ideation + sourced adversarial backtesting |
 | [`docs/identity.md`](docs/identity.md) | agent_id, spawn records, registry, traceability |
 | [`docs/intake.md`](docs/intake.md) | Manifest / database / agent-generated mission intake |
 | [`docs/agent-deploy-prompt.md`](docs/agent-deploy-prompt.md) | Hands-off deployment prompt for agentic systems |

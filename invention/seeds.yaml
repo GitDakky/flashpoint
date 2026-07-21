@@ -1,0 +1,32 @@
+# Domain inventory used to seed *structured* ideation.
+# Novelty lives at collisions between domains you actually own and understand.
+# Edit this to change the flavour of generated ideas. Two columns collide at random.
+
+domains:
+  # Your real, unusual, compound domains — the unfair advantage.
+  - governed AI workforce (least-privilege ephemeral agents with audit trails)
+  - property & lettings operations (Jersey / UK / Ireland / Portugal)
+  - construction project delivery & snagging
+  - building management systems (BMS / HVAC / Mitsubishi AE-200 / Niagara)
+  - self-hosted infrastructure (Proxmox / LXC / Docker / TrueNAS)
+  - institutional memory (context capsule / Neo4j / pgvector / decision logs)
+  - finance operations (iplicit / budgets / lender workbooks)
+  - egress governance gateways (APISIX scoped credentials + audit)
+  - multi-agent orchestration & temporal durable workflows
+  - identity & traceability for ephemeral compute
+  - Matrix / Teams co-worker agents (delegated act-as-user)
+  - home automation & sensor estates (Home Assistant / UniFi / Zigbee)
+  - data rooms, diligence & reconciliation at volume
+  - voice agents & telephony (3CX / LiveKit / SIP)
+  - air-gapped / on-prem LLM inference (DGX / Ollama)
+
+constraints:
+  # Constraint inversions that force non-obvious ideas.
+  - what if this were free
+  - what if this happened in under a second
+  - what if it had to work with zero internet
+  - what if it were illegal not to do this
+  - what if it had to be provable to an auditor
+  - what if a thousand of them acted at once
+  - what if it ran on hardware you already own
+  - what if it deleted itself when done
