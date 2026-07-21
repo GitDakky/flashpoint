@@ -138,26 +138,39 @@ def generate_ideas(n, domains, constraints, model, key):
         d = random.sample(domains, min(4, len(domains)))
         c = random.sample(constraints, min(2, len(constraints)))
         prompt = (
-            "You are an inventive engineer. Generate {k} genuinely novel invention/concept "
-            "ideas by COLLIDING pairs of these domains and applying a constraint inversion.\n\n"
+            "You are an inventive engineer who thinks in MECHANISMS, not business outcomes. "
+            f"Generate {per_call} genuinely novel invention concepts by COLLIDING 2+ of these domains "
+            "and applying a constraint inversion.\n\n"
             f"Domains to draw from (collide 2+ per idea):\n- " + "\n- ".join(d) + "\n\n"
             f"Constraint inversions to apply:\n- " + "\n- ".join(c) + "\n\n"
+            "For EACH idea you MUST supply a concrete, named technical mechanism — a specific "
+            "protocol, algorithm, data structure, or architectural primitive — that does not "
+            "obviously exist. AVOID 'desired outcome' ideas (e.g. 'a dashboard that shows X', "
+            "'automatically reconciles Y'); those are not patentable and will be rejected.\n"
             "Rules for each idea:\n"
-            "- It must sit at the intersection of at least two domains above (not generic).\n"
-            "- Give it a short title, one-line description, and 2-3 core 'mechanism' noun-phrases "
-            "  (the actual mechanism, not the marketing name) usable for prior-art search.\n"
-            "- Favour ideas that are buildable, defensible and valuable, but be bold.\n\n"
-            'Return ONLY a JSON array of {{"title","description","mechanisms":["...",...]}} objects, '
-            f"exactly {per_call} of them. No prose, no markdown."
-        ).format(k=per_call)
+            "- Sit at the intersection of at least two domains above (not generic).\n"
+            "- Title + one-line description.\n"
+            "- 'mechanism': the specific novel protocol/algorithm/primitive, named and described "
+            "  in one sentence (e.g. 'a canonical request-fingerprint that binds X to Y').\n"
+            "- 'non_obvious': one sentence on WHY this is not a predictable aggregation of known "
+            "  parts (the actual inventive step).\n"
+            "- 'mechanisms': 2-3 mechanism noun-phrases usable for prior-art search.\n\n"
+            'Return ONLY a JSON array of {{"title","description","mechanism","non_obvious",'
+            f'"mechanisms":["...",...]}} objects, exactly {per_call} of them. No prose, no markdown.'
+        )
         try:
             arr = _retry(lambda: _json_array(llm(prompt, model, key, max_tokens=3000))) or []
             for item in arr:
                 if isinstance(item, dict) and item.get("title") and item.get("mechanisms"):
+                    desc = (item.get("description") or "").strip()
+                    mech = (item.get("mechanism") or "").strip()
+                    nonob = (item.get("non_obvious") or "").strip()
                     ideas.append({
                         "id": f"idea-{len(ideas)+1:03d}",
                         "title": item["title"].strip(),
-                        "description": (item.get("description") or "").strip(),
+                        "description": desc,
+                        "mechanism": mech,
+                        "non_obvious": nonob,
                         "mechanisms": [str(m).strip() for m in item["mechanisms"][:3]],
                     })
         except Exception as e:
@@ -173,9 +186,11 @@ def screen_ideas(ideas, model, key, keep_top=None, min_score=0):
     for idea in ideas:
         prompt = (
             "You are a sceptical technical reviewer. Score this invention idea 0-10 on each of "
-            "novelty, feasibility, value (10 = best). Be honest; most ideas are only partly new.\n\n"
+            "novelty, feasibility, value (10 = best). Reward concrete novel mechanisms; penalise "
+            "'desired outcome' ideas with no enabling mechanism. Be honest; most ideas are only partly new.\n\n"
             f"Title: {idea['title']}\nDescription: {idea['description']}\n"
-            f"Mechanisms: {', '.join(idea['mechanisms'])}\n\n"
+            f"Mechanism: {idea.get('mechanism','')}\nNon-obvious step: {idea.get('non_obvious','')}\n"
+            f"Search phrases: {', '.join(idea['mechanisms'])}\n\n"
             'Return ONLY a JSON object {"novelty":int,"feasibility":int,"value":int,'
             '"reason":"one sentence"}.'
         )
@@ -216,7 +231,8 @@ def backtest_ideas(ideas, model, key):
             "invention idea using the RESEARCH DOSSIER provided (real prior art and sources). "
             "Your job is to kill it if you can.\n\n"
             f"IDEA\nTitle: {idea['title']}\nDescription: {idea['description']}\n"
-            f"Mechanisms: {', '.join(idea['mechanisms'])}\n\n"
+            f"Mechanism: {idea.get('mechanism','')}\nClaimed non-obvious step: {idea.get('non_obvious','')}\n"
+            f"Search phrases: {', '.join(idea['mechanisms'])}\n\n"
             f"{idea.get('dossier_text','(no dossier)')}\n\n"
             "Assess rigorously:\n"
             "1. NOVELTY: from the dossier's closest prior art, is the specific novel kernel "
